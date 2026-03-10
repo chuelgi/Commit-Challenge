@@ -1,42 +1,47 @@
+import tkinter
 from tkinter import *
-from tkinter import ttk
+from tkinter import ttk, messagebox
 
 import secrets
 from string import ascii_letters, digits, punctuation
-#secrets is for security tasks
 
 bank = digits + ascii_letters +punctuation
 
-def generate(pl):
-    generated = ''
-    for x in range(int(pl)):
-        generated += secrets.choice(bank)
+def generate(*args):
+    try:
+        pl = int(pass_len.get())
+
+        if pl <= 0:
+            raise ValueError
+
+        gp = ''
+        for x in range(pl):
+            gp += secrets.choice(bank)
+
+        #print("ran")
+        generated_pass.set(gp)
+
+    except ValueError:
+        messagebox.showerror('Invalid value','must enter a whole number greater than 0')
 
 
 root = Tk()
+root.title("Password Generator")
 
-root.title('Password Generator')
-mainframe = ttk.Frame(root, padding=(3,3,12,12))
-mainframe.grid(column=0, row=0, sticky=(N,W,E,S))
+mainframe = ttk.Frame(root)
+mainframe.grid(column=2)
 
-#input len
-length = StringVar()
-length_entry = ttk.Entry(mainframe, width=7, textvariable=length)
-length_entry.grid(column=2,row=1,sticky=(W,E))
+#length entry
+pass_len = StringVar()
+pass_len_entry = ttk.Entry(mainframe,textvariable=pass_len)
+pass_len_entry.grid()
+ttk.Label(mainframe, text="len").grid()
 
-res = StringVar()
 
-#ttk.Label(mainframe, textvariable=res).grid(column=2, row=1, sticky=(W,E))
-ttk.Button(mainframe, text='generate', command=generate).grid(column=3, row=5, sticky= W)
-ttk.Label(mainframe, text='password length').grid(column=3, row=1,sticky=W)
+#button
+generated_pass = StringVar()
+ttk.Button(mainframe,text="generate",command=generate).grid()
+ttk.Entry(mainframe,textvariable=generated_pass).grid() #entry so user can edit and copy password
 
-root.columnconfigure(0, weight=1)
-root.rowconfigure(0, weight=1)
-mainframe.columnconfigure(2, weight=1)
-for child in mainframe.winfo_children():
-    child.grid_configure(padx=5, pady=5)
-
-length_entry.focus()
-root.bind("<Return>", generate)
-
+#run program
 root.mainloop()
