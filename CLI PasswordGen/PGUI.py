@@ -1,8 +1,17 @@
 from tkinter import *
 from tkinter import ttk
 
-def generate():
-    return 'generate'
+import secrets
+from string import ascii_letters, digits, punctuation
+#secrets is for security tasks
+
+bank = digits + ascii_letters +punctuation
+
+def generate(pl):
+    generated = ''
+    for x in range(int(pl)):
+        generated += secrets.choice(bank)
+
 
 root = Tk()
 
