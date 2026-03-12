@@ -4,12 +4,21 @@ from datetime import datetime, timedelta
 from tkinter import ttk,messagebox
 
 def set_countdown():
-    start_time = datetime.now()
-    end_time = start_time+ timedelta(minutes = 5)
+    end_time = datetime.now() + timedelta(minutes = 25)
 
     def update():
-        now = datetime.now()
-        remaining = end_time - now
+        remaining = end_time - datetime.now()
+
+        if remaining.total_seconds() <= 0:
+            timer_var.set('00:00')
+            return
+
+        mins, secs = divmod(int(remaining.total_seconds()),60)
+        timer_var.set(f"{mins:02}:{secs:02}")
+
+        root.after(1000, update)
+
+    update()
 
 
     return
@@ -19,11 +28,10 @@ root = Tk()
 mainframe = ttk.Frame(root)
 mainframe.grid()
 
-x = datetime.now().time()
+timer_var = StringVar(value="25:00")
 
-ttk.Label(mainframe,text=x).grid()
-ttk.Button(mainframe,text="start",command=set_countdown)
+ttk.Label(mainframe,textvariable=timer_var).grid()
+ttk.Button(mainframe,text="start",command=set_countdown).grid()
 
 root.mainloop()
 #x = datetime.datetime.now()
-print(x)
