@@ -33,5 +33,7 @@ timer_var = StringVar(value="25:00")
 ttk.Label(mainframe,textvariable=timer_var).grid()
 ttk.Button(mainframe,text="start",command=set_countdown).grid()
 
+ttk.Button(mainframe, text="pasue").grid()
+
 root.mainloop()
 #x = datetime.datetime.now()
