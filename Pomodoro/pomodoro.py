@@ -3,26 +3,47 @@ import time
 from datetime import datetime, timedelta
 from tkinter import ttk,messagebox
 
+is_running = True
+end_time = None
+remaining= None
+
 def set_countdown():
-    end_time = datetime.now() + timedelta(minutes = 5)
+    global end_time
+    end_time= datetime.now() + timedelta(minutes = 5)
+    update()
 
-    def update():
-        remaining = end_time - datetime.now()
 
+def update():
+    global remaining
+    remaining = end_time - datetime.now()
+
+    if is_running:
         if remaining.total_seconds() <= 0:
             timer_var.set('00:00')
             break_indicator.set("On break")
             return
 
-        mins, secs = divmod(int(remaining.total_seconds()),60)
+        mins, secs = divmod(int(remaining.total_seconds()), 60)
         timer_var.set(f"{mins:02}:{secs:02}")
 
         root.after(1000, update)
 
-    update()
+
+def pause():
+    global is_running
+    is_running = not is_running
+
+    if is_running:
+        #resume
+        update()
+
+    else:
+        #pause and save remaining time
+        global end_time
+        end_time = datetime.now() + remaining
 
 
-    return
+
 
 root = Tk()
 
@@ -37,7 +58,9 @@ ttk.Button(mainframe,text="start",command=set_countdown).grid()
 
 break_indicator =StringVar(value = "not on break")
 ttk.Label(mainframe,textvariable= break_indicator).grid()
-ttk.Button(mainframe, text="pause").grid()
+
+is_paused = StringVar(value="Pause")
+ttk.Button(mainframe, textvariable=is_paused, command=pause).grid()
 
 root.mainloop()
 #x = datetime.datetime.now()
