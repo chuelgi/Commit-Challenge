@@ -3,15 +3,24 @@ import time
 from datetime import datetime, timedelta
 from tkinter import ttk,messagebox
 
+
 is_running = True
 end_time = None
 remaining= None
 
 def set_countdown():
-    global end_time
-    end_time= datetime.now() + timedelta(seconds = 10)
-    start_var.set(value="Reset")
-    update()
+    global is_running
+
+    if start_var.get() =="Start":
+        start_var.set(value="Reset")
+        is_running = True
+        global end_time
+        end_time= datetime.now() + timedelta(seconds = 10)
+        update()
+    else:
+        is_running = False
+        start_var.set(value="Start")
+
 
 
 def update():
@@ -25,6 +34,7 @@ def update():
     if remaining.total_seconds() <= 0:
         timer_var.set('00:00')
         messagebox.showinfo("Times up","Study session has ended, begin break.")
+        start_var.set(value = "Start")
         break_indicator.set("On break")
         return
 
