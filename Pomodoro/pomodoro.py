@@ -9,24 +9,29 @@ remaining= None
 
 def set_countdown():
     global end_time
-    end_time= datetime.now() + timedelta(minutes = 5)
+    end_time= datetime.now() + timedelta(seconds = 10)
+    start_var.set(value="Reset")
     update()
 
 
 def update():
+
+    if not is_running:
+        return
+
     global remaining
     remaining = end_time - datetime.now()
 
-    if is_running:
-        if remaining.total_seconds() <= 0:
-            timer_var.set('00:00')
-            break_indicator.set("On break")
-            return
+    if remaining.total_seconds() <= 0:
+        timer_var.set('00:00')
+        messagebox.showinfo("Times up","Study session has ended, begin break.")
+        break_indicator.set("On break")
+        return
 
-        mins, secs = divmod(int(remaining.total_seconds()), 60)
-        timer_var.set(f"{mins:02}:{secs:02}")
+    mins, secs = divmod(int(remaining.total_seconds()), 60)
+    timer_var.set(f"{mins:02}:{secs:02}")
 
-        root.after(1000, update)
+    root.after(1000, update)
 
 
 def pause():
@@ -35,12 +40,18 @@ def pause():
 
     if is_running:
         #resume
+        is_paused.set("paused")
+
+        #calculates new end time
+        global end_time
+        end_time = datetime.now() + remaining
+
+        #starts timer
         update()
 
     else:
-        #pause and save remaining time
-        global end_time
-        end_time = datetime.now() + remaining
+        #pause
+        is_paused.set("resume")
 
 
 
@@ -53,7 +64,9 @@ mainframe.grid()
 timer_var = StringVar(value="25:00")
 
 ttk.Label(mainframe,textvariable=timer_var).grid()
-ttk.Button(mainframe,text="start",command=set_countdown).grid()
+
+start_var = StringVar(value="Start")
+ttk.Button(mainframe,textvariable=start_var,command=set_countdown).grid()
 
 
 break_indicator =StringVar(value = "not on break")
