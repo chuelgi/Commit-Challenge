@@ -1,3 +1,4 @@
+.idea/
 CLI PasswordGen/build
 CLI PasswordGen/dist
 CLI PasswordGen/*.spec
