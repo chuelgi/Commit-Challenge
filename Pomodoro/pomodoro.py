@@ -20,6 +20,7 @@ def set_countdown():
     else:
         is_running = False
         start_var.set(value="Start")
+        timer_var.set("00:10")
 
 
 
